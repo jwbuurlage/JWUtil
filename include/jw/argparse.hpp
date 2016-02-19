@@ -23,7 +23,7 @@ namespace jw {
 
 class ArgParse {
   public:
-    ArgParse() { }
+    ArgParse() {}
 
     bool parse(int argc, char* argv[]) {
         programName_ = std::string(argv[0]);
@@ -38,12 +38,15 @@ class ArgParse {
                 if (currentFlag != "-h" &&
                     defaults_.find(currentFlag) == defaults_.end()) {
                     listHelp();
-                    JWLogError << "Unrecognized option: " << currentFlag << endLog;
+                    JWLogError << "Unrecognized option: " << currentFlag
+                               << endLog;
                     return false;
                 }
             } else {
                 if (currentFlag.empty()) {
-                    JWLogError << "ArgParse: argument given before initial flag." << endLog;
+                    JWLogError
+                        << "ArgParse: argument given before initial flag."
+                        << endLog;
                     return false;
                 }
 
@@ -71,7 +74,7 @@ class ArgParse {
                 if (required_[option.first]) {
                     listHelp();
                     JWLogError << "Missing required argument: " << option.first
-                                << endLog;
+                               << endLog;
                     return false;
                 }
 
@@ -119,6 +122,7 @@ class ArgParse {
         ss << defaultValue;
         defaults_[option] = ss.str();
         descriptions_[option] = description;
+        required_[option] = false;
     }
 
     bool wasPassed(std::string key) const {
