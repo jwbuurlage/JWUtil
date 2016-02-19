@@ -60,8 +60,13 @@ class ArgParse {
             }
         }
 
-        if (!currentFlag.empty() && args_[currentFlag].empty())
-            args_[currentFlag] = defaults_[currentFlag];
+        if (!currentFlag.empty() && args_[currentFlag].empty()) {
+            if (defaults_.find(currentFlag) != defaults_.end()) {
+                args_[currentFlag] = defaults_.at(currentFlag);
+            } else {
+                args_[currentFlag] = "";
+            }
+        }
 
         if (wasPassed("-h")) {
             listHelp();
@@ -102,7 +107,7 @@ class ArgParse {
         for (auto& option : defaults_) {
             std::cout << "\t" << option.first << ": "
                       << descriptions_.at(option.first);
-            if (!defaults_.at(option.first).empty())
+            if (option.second.empty())
                 std::cout << ". (" << option.second << ")";
             std::cout << std::endl;
         }
