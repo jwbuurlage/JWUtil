@@ -19,8 +19,6 @@ License, or (at your option) any later version.
 #include <set>
 #include <map>
 
-#include "color_output.hpp"
-
 #define JWLogResult (jw::Logger() << jw::LogType::result)
 #define JWLogBenchmark (jw::Logger() << jw::LogType::benchmark)
 #define JWLogDebug (jw::Logger() << jw::LogType::debug)
@@ -147,36 +145,55 @@ class Logger {
     bool finalized_ = false;
 
     void finalize() {
+        // For reference, here is a table with terminal colors:
+        // Black       0;30     Dark Gray     1;30
+        // Blue        0;34     Light Blue    1;34
+        // Green       0;32     Light Green   1;32
+        // Cyan        0;36     Light Cyan    1;36
+        // Red         0;31     Light Red     1;31
+        // Purple      0;35     Light Purple  1;35
+        // Brown       0;33     Yellow        1;33
+        // Light Gray  0;37     White         1;37
+
+        static std::map<std::string, std::string> colors_start = {
+            {"darkgray", "\033[1;30m"}, {"blue", "\033[1;34m"},
+            {"green", "\033[1;32m"},    {"cyan", "\033[1;36m"},
+            {"red", "\033[1;31m"},      {"purple", "\033[1;35m"},
+            {"yellow", "\033[1;33m"},   {"white", "\033[1;37m"},
+        };
+
+        static std::string colors_end = "\033[0m";
+
         switch (t_) {
         case LogType::info:
-            std::cout << jw::colors::start["cyan"] << "INFO: ";
+            std::cout << colors_start["cyan"] << "INFO: ";
             break;
 
         case LogType::warning:
-            std::cout << jw::colors::start["blue"] << "WARNING: ";
+            std::cout << colors_start["blue"] << "WARNING: ";
             break;
 
         case LogType::error:
-            std::cout << jw::colors::start["red"] << "ERROR: ";
+            std::cout << colors_start["red"] << "ERROR: ";
             break;
 
         case LogType::debug:
-            std::cout << jw::colors::start["darkgray"] << "DEBUG: ";
+            std::cout << colors_start["darkgray"] << "DEBUG: ";
             break;
 
         case LogType::benchmark:
-            std::cout << jw::colors::start["purple"] << "BENCHMARK: ";
+            std::cout << colors_start["purple"] << "BENCHMARK: ";
             break;
 
         case LogType::result:
-            std::cout << jw::colors::start["yellow"] << "RESULT: ";
+            std::cout << colors_start["yellow"] << "RESULT: ";
             break;
 
         default:
             break;
         }
 
-        std::cout << jw::colors::end;
+        std::cout << colors_end;
         std::cout << ss.str() << std::endl;
 
         finalized_ = true;
