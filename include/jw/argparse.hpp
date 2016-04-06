@@ -107,7 +107,7 @@ class ArgParse {
         for (auto& option : defaults_) {
             std::cout << "\t" << option.first << ": "
                       << descriptions_.at(option.first);
-            if (option.second.empty())
+            if (!option.second.empty())
                 std::cout << ". (" << option.second << ")";
             std::cout << std::endl;
         }
